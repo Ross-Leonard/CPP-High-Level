@@ -1,0 +1,389 @@
+#include <iostream>
+#include <cmath>
+#include <fstream> 
+using namespace std;
+
+class point
+{
+private:
+    int r;
+    int s;
+
+public:
+   
+    double x;
+    double y;
+
+    point(int, int);
+    point operator+(point);
+    point operator-(point);
+    bool operator==(point);
+    bool operator!=(point);
+    bool operator>(point);
+    bool operator<(point);
+    bool operator>=(point);
+    friend ostream& operator<<(ostream&, point);
+
+    // constructor with two arguments
+    point(double _x, double _y)
+    {
+        x = _x;
+        y = _y;
+    }
+
+    // translate
+    void translation(double _x, double _y)
+    {
+        x += _x;
+        y += _y;
+    }
+
+    // scaling
+    void scaling(double _x, double _y)
+    {
+        x = (x * _x);
+        y = (y * _y);
+    }
+
+    // rotation
+    void rotation(double d)
+    {
+        double tx = x, ty = y;
+        tx = (x * cos(d) - y * sin(d));
+        ty = (x * sin(d) + y * cos(d));
+
+        // store in x and y
+        x = tx;
+        y = ty;
+    }
+
+    // shearing X direction
+    void shearingX(double _x)
+    {
+        x += _x;
+    }
+
+    // shearing Y direction      
+    void shearingY(double _y)
+    {
+        y += _y;
+    }
+
+};
+// print the box
+void printBox(point a, point b, point c, point d,ofstream& outfile)
+{
+    cout << "\nA: (" << a.x << "," << a.y << ")";
+    cout << " B: (" << b.x << "," << b.y << ")";
+    cout << " C: (" << c.x << "," << c.y << ")";
+    cout << " D: (" << d.x << "," << d.y << ")\n";
+
+    outfile << "\nA: (" << a.x << "," << a.y << ")";
+    outfile << " B: (" << b.x << "," << b.y << ")";
+    outfile << " C: (" << c.x << "," << c.y << ")";
+    outfile << " D: (" << d.x << "," << d.y << ")\n";   
+}
+
+void printBox(point a, point b,ofstream& outfile)
+{
+    cout << "Comparing the two, " << b.x << b.y << " is closer than " << a.x << a.y;
+    outfile << "Comparing the two, " << b.x << b.y << " is closer than " << a.x << a.y;
+}
+
+
+ostream& operator<<(ostream& reference, point P)
+{ 
+    return reference;
+}
+
+bool point::operator>=(point P)
+{
+    if (r * r + s * s >= (P.r) * (P.r) + (P.s) * (P.s))
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+bool point::operator<(point P)
+{
+    if (r * r + s * s < (P.r) * (P.r) + (P.s) * (P.s))
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+bool point::operator>(point P)
+{    
+    if (r * r + s * s > (P.r)* (P.r) + (P.s) * (P.s))
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+
+}
+
+point::point(int r, int s)
+{
+    x = r;
+    y = s;
+}
+
+bool point::operator== (point P)
+{
+    if ((r == P.r) && (s == P.s))
+        return true;
+    else
+        return false;
+}
+
+bool point::operator!= (point P)
+{
+    if (r != P.r || s != P.s)
+        return true;
+    else
+        return false;
+}
+
+point point::operator+(point P)
+{
+    point temp(r + P.r, s + P.s);
+    return temp;
+
+}
+
+point point::operator-(point P)
+{
+    point temp(r - P.r, s - P.s);
+    return temp;
+}
+
+void printBox2(point a, point b,ofstream& outfile)
+{
+    cout << "\nA: (" << a.x << "," << a.y << ") + (" << b.x << "," << b.y << ") equals (" << a.x + b.x << "," << a.y + b.y << ")" << endl;
+    outfile << "\nA: (" << a.x << "," << a.y << ") + (" << b.x << "," << b.y << ") equals (" << a.x + b.x << "," << a.y + b.y << ")" << endl;
+}
+void printBox3(point a, point b,ofstream& outfile)
+{
+    cout << "\nA: (" << a.x << "," << a.y << ") - (" << b.x << "," << b.y << ") equals (" << a.x - b.x << "," << a.y - b.y << ")" << endl;
+    outfile << "\nA: (" << a.x << "," << a.y << ") - (" << b.x << "," << b.y << ") equals (" << a.x - b.x << "," << a.y - b.y << ")" << endl;
+}
+
+int main()
+{
+
+    ofstream outfile;
+    outfile.open("Boxresults.txt");
+    // box points
+    point A(2, 2);
+    point B(2, 5);
+    point C(4, 5);
+    point D(4, 2);
+
+
+    // print box
+    cout << "\n Box is - ";
+    printBox(A, B, C, D, outfile);
+    outfile << endl;
+    outfile << endl;
+    outfile << endl;
+    outfile << endl;
+    outfile << endl;
+    outfile << endl;
+
+    // translate each point at x=2 and y=1
+    cout << "\nTranslating x=2 , y=1";
+    A.translation(2, 1);
+    B.translation(2, 1);
+    C.translation(2, 1);
+    D.translation(2, 1);
+    printBox(A, B, C, D,outfile);
+    outfile << endl;
+    outfile << endl;
+    outfile << endl;
+    outfile << endl;
+    outfile << endl;
+    outfile << endl;
+
+    // scaling by x=2 and y=0.5
+    cout << "\nScaling x=2 , y=.5";
+    A.scaling(2, .5);
+    B.scaling(2, .5);
+    C.scaling(2, .5);
+    D.scaling(2, .5);
+    printBox(A, B, C, D,outfile);
+    outfile << endl;
+    outfile << endl;
+    outfile << endl;
+    outfile << endl;
+    outfile << endl;
+    outfile << endl;
+
+    // rotate 30 degree PI/6
+    cout << "\nRotate 30 degree" << endl;
+    //cout << (22 / (double)42);
+    A.rotation(22 / (double)42);
+    B.rotation(22 / (double)42);
+    C.rotation(22 / (double)42);
+    D.rotation(22 / (double)42);
+    printBox(A, B, C, D,outfile);
+    outfile << endl;
+    outfile << endl;
+    outfile << endl;
+    outfile << endl;
+    outfile << endl;
+    outfile << endl;
+
+
+    // rotate 60 degree PI/3
+    cout << "\nRotate 60 degree";
+    A.rotation(22 / (double)21);
+    B.rotation(22 / (double)21);
+    C.rotation(22 / (double)21);
+    D.rotation(22 / (double)21);
+    printBox(A, B, C, D,outfile);
+    outfile << endl;
+    outfile << endl;
+    outfile << endl;
+    outfile << endl;
+    outfile << endl;
+    outfile << endl;
+
+    // shearing in the x direction 1.5
+    cout << "\nShering x direction 1.5";
+    A.shearingX(1.5);
+    B.shearingX(1.5);
+    C.shearingX(1.5);
+    D.shearingX(1.5);
+    printBox(A, B, C, D,outfile);
+    outfile << endl;
+    outfile << endl;
+    outfile << endl;
+    outfile << endl;
+    outfile << endl;
+    outfile << endl;
+
+    // shearing in the y direction 1.7
+    cout << "\nShering y direction 1.7";
+    A.shearingY(1.7);
+    B.shearingY(1.7);
+    C.shearingY(1.7);
+    D.shearingY(1.7);
+    printBox(A, B, C, D,outfile);
+    outfile << endl;
+    outfile << endl;
+    outfile << endl;
+    outfile << endl;
+    outfile << endl;
+    outfile << endl;
+
+    //second page of classes
+   //Operator +
+//add the two points A and B 
+    cout << "Adding point A and point B";
+    printBox2(A, B,outfile);
+    //Operator -
+    cout << "Subtracting point A and point B";
+    printBox3(C, D,outfile);
+
+    //Operator ==
+    //check whether C and D are equal or not
+    cout << "Is C equal to D?" << endl;
+    outfile << "Is C equal to D?" << endl;
+    if (C == D)
+    {
+        cout << "Equal" << endl;
+        outfile << "Equal" << endl;
+    }
+    else
+        cout << "Not Equal" << endl;
+    outfile << "Not Equal" << endl;
+
+    //check A and B
+    cout << "Is A equal to B?" << endl;
+    outfile << "Is A equal to B?" << endl;
+    if (A == B)
+    {
+        cout << "Equal" << endl;
+        outfile << "Equal" << endl;
+    }
+    else
+        cout << "Not Equal" << endl;
+    outfile << "Not Equal" << endl;
+
+    //Operator !=
+    //check whether C and D are equal or not
+    cout << "Is C not equal to D?" << endl;
+    outfile << "Is C not equal to D?" << endl;
+    if (C != D)
+    {
+        cout << "Equal" << endl;
+    outfile << "Equal" << endl;
+    }
+    else
+        cout << "Not Equal" << endl;
+    outfile << "Not Equal" << endl;
+
+    //check A and B
+    cout << "Is A not equal to D?" << endl;
+    outfile << "Is A not equal to D?" << endl;
+    if (A != D)
+    {
+        cout << "Equal" << endl;
+        outfile << "Equal" << endl;
+    }
+    else
+        cout << "Not Equal" << endl;
+    outfile << "Not Equal" << endl;
+
+    //Operator >
+    //check whether A is closer or C 
+    cout << "Is A greater than D?" << endl;
+    outfile << "Is A greater than D?" << endl;
+    if (A > C)
+    {        
+        cout << "C is closer" << endl;
+        outfile << "C is closer" << endl;
+    }
+    else
+        cout << "A is closer" << endl;
+    outfile << "A is closer" << endl;
+
+    //Operator <
+    //check whether A is closer or C
+    cout << "Is A less than C?" << endl;
+    outfile << "Is A less than C?" << endl;
+    if (A < C)
+    {
+        cout << "A is closer" << endl;
+        outfile << "A is closer" << endl;
+    }
+    else
+        cout << "C is closer" << endl;
+
+    //Operator >=
+   //check whether C is closer or D
+    cout << "Is C greater than or equal to D?" << endl;
+    if (C >= D)
+    {
+        cout << "Yes! C >= D" << endl;
+        outfile << "Yes! C >= D" << endl;
+    }
+    else
+        cout << "False !" << endl;
+    outfile << "False !" << endl;
+
+
+    system("pause");
+    return 0;
+}
