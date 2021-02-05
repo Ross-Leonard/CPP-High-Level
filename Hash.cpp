@@ -1,7 +1,3 @@
-//John Ross Leonard
-//Hash Program
-//CS 372
-
 #include<iostream>
 #include<cmath>
 #include<string>
